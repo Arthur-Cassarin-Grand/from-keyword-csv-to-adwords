@@ -54,6 +54,23 @@ Next :
 
 - Add your developer_token into the `googleads.yaml`. You can ask it to Google API team into your Adwords's CM account, into *API Center* > *Developper token*. The average waiting time for an answer is 48 hours. Fill the form right because Google ask many questions, the way you answer them will grant you the right access you need. A *Standard access* is enough for this script.
 
+## How to start script
+
+`python3 main.py -c data.csv -a 123-456-7891 -d ';'`
+
+usage: main.py [-h] -csv CSV -idadwords IDADWORDS -delimiter DELIMITER
+
+```
+optional arguments:
+  -csv CSV, --csv CSV, -c CSV
+                        The CSV file that contains keywords, ads groups and campaigns.
+  -idadwords IDADWORDS, --idadwords IDADWORDS, -a IDADWORDS
+                        The account Adwords that will receive new keywords, ads groups and campaigns. 
+                        I.e. 123-456-7891 or 1234567891
+  -delimiter DELIMITER, --delimiter DELIMITER, -d DELIMITER
+                        CSV delimiter, for exemple , or ;
+```
+
 ## What this Google Adwords API Python's script can teach you
 
 I had a hard time to setup Google API account, so I hope my script will help beginners to start developping with Google Adwords API for Python. Look at the main.py file.
