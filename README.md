@@ -58,9 +58,9 @@ Next :
 
 `python3 main.py -c data.csv -a 123-456-7891 -d ';'`
 
+```
 usage: main.py [-h] -csv CSV -idadwords IDADWORDS -delimiter DELIMITER
 
-```
 optional arguments:
   -csv CSV, --csv CSV, -c CSV
                         The CSV file that contains keywords, ads groups and campaigns.
