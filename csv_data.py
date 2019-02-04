@@ -68,8 +68,12 @@ def get_ads_campaigns(file, headings_map, delimiter):
         for row in csv_reader:
             line_counter += 1
             # Check integrity
-            if row[headings_map['campaign']] == '':
-                print('The campaign n°' + str(line_counter) + ' has no name.')
+            try:
+                if row[headings_map['campaign']] == '':
+                    print('The campaign n°' + str(line_counter) + ' has no name.')
+                    sys.exit(1)
+            except KeyError:
+                print('The CSV delimiter must be wrong or the CSV file doesn\'t respect the heading map (see main.py file).')
                 sys.exit(1)
             # Create entity
             campaign = AdsCampaign(

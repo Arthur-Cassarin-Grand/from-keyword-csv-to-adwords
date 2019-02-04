@@ -15,14 +15,13 @@
 import sys
 import time
 import argparse
+import os
 
 from googleads import adwords
 from googleads.errors import *
 
 from csv_data import *
 from adwords_engine import *
-
-file = "data.csv"
 
 # Make the match with your CSV file headings (here in french)
 headings_map = {
@@ -38,9 +37,6 @@ targeting_map = {
     "EXACT":"Exact",
 }
 
-# CSV delimiter, by default ','
-delimiter = ";"
-
 def main(args):
     # Check if Python 3
     if (sys.version_info < (3, 0)):
@@ -48,11 +44,18 @@ def main(args):
         sys.exit(1)
 
     parser=argparse.ArgumentParser()
-    parser.add_argument('-csv','--csv', help='The CSV file that contains keywords, ads groups and campaigns.', required=True)
-    parser.add_argument('-idadwords','--idadwords', help='The account Adwords that will receive new keywords, ads groups and campaigns. I.e. 123-456-7891 or 1234567891', required=True)
+    parser.add_argument('-csv','--csv', '-c', help='The CSV file that contains keywords, ads groups and campaigns.', required=True)
+    parser.add_argument('-idadwords','--idadwords', '-a', help='The account Adwords that will receive new keywords, ads groups and campaigns. I.e. 123-456-7891 or 1234567891', required=True)
+    parser.add_argument('-delimiter','--delimiter', '-d', help='CSV delimiter, for exemple , or ;', required=True)
     args=parser.parse_args()
 
     csv_file = args.csv
+    filename, file_extension = os.path.splitext(csv_file)
+    if file_extension != '.csv':
+        print('The data file must be a CSV type format.')
+        sys.exit(1)
+
+    delimiter = args.delimiter
     customer_service_id = args.idadwords
     if '-' in customer_service_id:
         customer_service_id = customer_service_id.replace('-','')
