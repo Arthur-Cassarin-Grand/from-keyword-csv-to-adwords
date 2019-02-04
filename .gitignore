@@ -1,0 +1,4 @@
+*.yaml
+*.csv
+__pycache__
+*.json
