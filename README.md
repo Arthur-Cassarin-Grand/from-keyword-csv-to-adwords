@@ -54,7 +54,7 @@ Next :
 
 - Add your developer_token into the `googleads.yaml`. You can ask it to Google API team into your Adwords's CM account, into *API Center* > *Developper token*. The average waiting time for an answer is 48 hours. Fill the form right because Google ask many questions, the way you answer them will grant you the right access you need. A *Standard access* is enough for this script.
 
-## How to start script
+## How to start the script
 
 `python3 main.py -c data.csv -a 123-456-7891 -d ';'`
 
