@@ -135,7 +135,7 @@ def get_ads_groups(file, headings_map, delimiter):
             ad_group = AdsGroup(
                 clear_string_for_api(row[headings_map['ads_group']]),
                 DEFAULT_ADS_GROUP_BID_AMOUNT,
-                row[headings_map['campaign']]
+                clear_string_for_api(row[headings_map['campaign']])
             )
             add_item_if_not_exists(ad_group, ads_group)
     return ads_group
@@ -175,7 +175,7 @@ def get_ads_keywords(file, headings_map, targeting_map, delimiter):
             keyword = AdsKeyword(
                 clear_string_for_api(row[headings_map['text']]),
                 targeting,
-                row[headings_map['ads_group']]
+                clear_string_for_api(row[headings_map['ads_group']])
             )
             add_item_if_not_exists(keyword, ads_keywords)
     return ads_keywords
