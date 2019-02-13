@@ -47,6 +47,37 @@ class AdsKeyword(object):
         return self.text == other.text and self.targeting == other.targeting
 
 """
+Prevent illegal caracters for Google Adwords API
+"""
+def clear_string_for_api(text):
+    text = text.replace("’","'")
+    text = text.replace("@","")
+    text = text.replace("!","")
+    text = text.replace(",","")
+    text = text.replace("%","")
+    text = text.replace("^","")
+    text = text.replace("*","")
+    text = text.replace("(","")
+    text = text.replace(")","")
+    text = text.replace("=","")
+    text = text.replace("{","")
+    text = text.replace("}","")
+    text = text.replace(";","")
+    text = text.replace("~","")
+    text = text.replace("`","")
+    text = text.replace("<","")
+    text = text.replace(">","")
+    text = text.replace("?","")
+    text = text.replace("|","")
+    return text
+
+"""
+To count campaigns/ads groups/keywords loaded in CSV file
+"""
+def count_elements(elements):
+    return len(elements)
+
+"""
 Add the item in the given list if the item doesn't already exists.
 """
 def add_item_if_not_exists(item, items_list):
@@ -77,7 +108,7 @@ def get_ads_campaigns(file, headings_map, delimiter):
                 sys.exit(1)
             # Create entity
             campaign = AdsCampaign(
-                row[headings_map['campaign']],
+                clear_string_for_api(row[headings_map['campaign']]),
                 DEFAULT_ADS_CAMPAIGN_BUDGET
             )
             add_item_if_not_exists(campaign, campaigns_group)
@@ -102,7 +133,7 @@ def get_ads_groups(file, headings_map, delimiter):
                 sys.exit(1)
             # Create entity
             ad_group = AdsGroup(
-                row[headings_map['ads_group']],
+                clear_string_for_api(row[headings_map['ads_group']]),
                 DEFAULT_ADS_GROUP_BID_AMOUNT,
                 row[headings_map['campaign']]
             )
@@ -142,7 +173,7 @@ def get_ads_keywords(file, headings_map, targeting_map, delimiter):
                 print('The keyword n°' + str(line_counter) + ' has an invalid targeting (must match the heading_targeting pattern).')
                 sys.exit(1)
             keyword = AdsKeyword(
-                row[headings_map['text']],
+                clear_string_for_api(row[headings_map['text']]),
                 targeting,
                 row[headings_map['ads_group']]
             )

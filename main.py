@@ -78,7 +78,23 @@ def main(args):
     csv_campaigns = get_ads_campaigns(csv_file, headings_map, delimiter)
     csv_ads_groups = get_ads_groups(csv_file, headings_map, delimiter)
     csv_keywords = get_ads_keywords(csv_file, headings_map, targeting_map, delimiter)
-    print('CSV file is OK. Adwords API running...')
+    nb_campaigns = str(count_elements(csv_campaigns))
+    nb_ads_groups = str(count_elements(csv_ads_groups))
+    nb_keywords = str(count_elements(csv_keywords))
+    
+    print('CSV file is OK.')
+    print('Campaigns found : ' + nb_campaigns)
+    print('Ads groups found : ' + nb_ads_groups)
+    print('Keywords found : ' + nb_keywords)
+
+    start_script_input = input("Do you want to import your data into Google Ads ? [Y/N] : ")
+    if start_script_input == "N" or start_script_input == "n":
+        sys.exit(0)
+    elif start_script_input != "Y" and start_script_input != "y":
+        print("Bad user input, exit script.")
+        sys.exit(1)
+
+    print('Adwords API running...')
 
     # --- Create campaigns
     account_campaigns = get_adwords_campaigns(client)
@@ -91,6 +107,7 @@ def main(args):
                 exists = True
         if exists == False:
             # If not, create it
+            print("Create '" + csv_campaign.name + "' campaign")
             create_adwords_campaign(client, csv_campaign)
             # Refresh the account campaigns's list
             account_campaigns = get_adwords_campaigns(client)
@@ -110,6 +127,7 @@ def main(args):
                     if account_ads_group['name'] == csv_ads_group.name:
                         exists = True
                 if exists == False:
+                    print("Create '" + csv_ads_group.name + "' ads group")
                     create_adwords_ad_group(client, campaign_id, csv_ads_group)
                     # Refresh the account ads group's list
                     account_ads_groups = get_adwords_ads_groups(client, campaign_id)
@@ -132,6 +150,7 @@ def main(args):
                             if account_ads_group_keyword['criterion']['text'] == csv_keyword.text:
                                 exists = True
                         if exists == False:
+                            print("Create '" + csv_keyword.text + "' keyword [Targeting : " + csv_keyword.targeting + "]")
                             create_adwords_keyword(client, adwords_ad_group_id, csv_keyword)
                             # Refresh the account ads group's keywords list
                             account_ads_group_keywords = get_adwords_ads_group_keywords(
@@ -140,9 +159,9 @@ def main(args):
                             )
                             created_keywords += 1
 
-    print('Campaigns created : ' + str(created_campaigns))
-    print('Ads groups created : ' + str(created_ads_groups))
-    print('Keywords created : ' + str(created_keywords))
+    print('Campaigns created : ' + str(created_campaigns) + ' on ' + nb_campaigns + ' found')
+    print('Ads groups created : ' + str(created_ads_groups) + ' on ' + nb_ads_groups + ' found')
+    print('Keywords created : ' + str(created_keywords) + ' on ' + nb_keywords + ' found')
     processed_time = round(time.time() - start_time,2)
     print("Finished in %s seconds" % processed_time)
 
