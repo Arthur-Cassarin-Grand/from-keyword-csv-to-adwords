@@ -51,24 +51,29 @@ Prevent illegal caracters for Google Adwords API
 """
 def clear_string_for_api(text):
     text = text.replace("’","'")
-    text = text.replace("@","")
-    text = text.replace("!","")
-    text = text.replace(",","")
-    text = text.replace("%","")
-    text = text.replace("^","")
-    text = text.replace("*","")
-    text = text.replace("(","")
-    text = text.replace(")","")
-    text = text.replace("=","")
-    text = text.replace("{","")
-    text = text.replace("}","")
-    text = text.replace(";","")
-    text = text.replace("~","")
-    text = text.replace("`","")
-    text = text.replace("<","")
-    text = text.replace(">","")
-    text = text.replace("?","")
-    text = text.replace("|","")
+    illegal_caracters = [
+        "@",
+        "!",
+        ",",
+        "%",
+        "^",
+        "*",
+        "(",
+        ")",
+        "=",
+        "{",
+        "}",
+        "~",
+        "`",
+        "<",
+        ">",
+        "?",
+        "|"
+    ]
+
+    for illegal_caracter in illegal_caracters:
+        text = text.replace(illegal_caracter, "")
+
     return text
 
 """
