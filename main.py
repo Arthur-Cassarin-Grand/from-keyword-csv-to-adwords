@@ -35,6 +35,7 @@ targeting_map = {
     "BROAD":"Large",
     "PHRASE":"Expression",
     "EXACT":"Exact",
+    "BPE":"BPE", # Broad with +, Phrase and Expression
 }
 
 def main(args):
@@ -83,9 +84,9 @@ def main(args):
     nb_keywords = str(count_elements(csv_keywords))
     
     print('CSV file is OK.')
-    print('Campaigns found : ' + nb_campaigns)
-    print('Ads groups found : ' + nb_ads_groups)
-    print('Keywords found : ' + nb_keywords)
+    print('Campaigns found in CSV file : ' + nb_campaigns)
+    print('Ads groups found in CSV file : ' + nb_ads_groups)
+    print('Keywords found in CSV file : ' + nb_keywords)
 
     start_script_input = input("Do you want to import your data into Google Ads ? [Y/N] : ")
     if start_script_input == "N" or start_script_input == "n":
@@ -140,16 +141,10 @@ def main(args):
                 for csv_keyword in csv_keywords:
                     # If the keyword belongs to the ads group
                     if csv_keyword.ads_group == csv_ads_group.name:
-                        # Check if the ads group already exists (based on it's name)
-                        account_ads_group_keywords = get_adwords_ads_group_keywords(
-                            client,
-                            adwords_ad_group_id,
-                        )
-                        exists = False
-                        for account_ads_group_keyword in account_ads_group_keywords:
-                            if account_ads_group_keyword['criterion']['text'] == csv_keyword.text:
-                                exists = True
-                        if exists == False:
+                        if csv_keyword.targeting == 'BPE':
+                            print("Creating Broad-Phrase-Exact Keywords for " + csv_keyword.text + "' keyword")
+                            # -- PHRASE --
+                            csv_keyword.targeting = "PHRASE"
                             print("Create '" + csv_keyword.text + "' keyword [Targeting : " + csv_keyword.targeting + "]")
                             create_adwords_keyword(client, adwords_ad_group_id, csv_keyword)
                             # Refresh the account ads group's keywords list
@@ -158,6 +153,47 @@ def main(args):
                                 adwords_ad_group_id,
                             )
                             created_keywords += 1
+                            # -- EXACT --
+                            csv_keyword.targeting = "EXACT"
+                            print("Create '" + csv_keyword.text + "' keyword [Targeting : " + csv_keyword.targeting + "]")
+                            create_adwords_keyword(client, adwords_ad_group_id, csv_keyword)
+                            # Refresh the account ads group's keywords list
+                            account_ads_group_keywords = get_adwords_ads_group_keywords(
+                                client,
+                                adwords_ad_group_id,
+                            )
+                            created_keywords += 1
+                            # -- BROAD MODIFIED --
+                            csv_keyword.text = get_broad_modified(csv_keyword.text)
+                            csv_keyword.targeting = 'BROAD'
+                            print("Create '" + csv_keyword.text + "' keyword [Targeting : " + csv_keyword.targeting + "]")
+                            create_adwords_keyword(client, adwords_ad_group_id, csv_keyword)
+                            # Refresh the account ads group's keywords list
+                            account_ads_group_keywords = get_adwords_ads_group_keywords(
+                                client,
+                                adwords_ad_group_id,
+                            )
+                            created_keywords += 1
+                            
+                        else: 
+                            # Check if the ads group already exists (based on it's name)
+                            account_ads_group_keywords = get_adwords_ads_group_keywords(
+                                client,
+                                adwords_ad_group_id,
+                            )
+                            exists = False
+                            for account_ads_group_keyword in account_ads_group_keywords:
+                                if account_ads_group_keyword['criterion']['text'] == csv_keyword.text:
+                                    exists = True
+                            if exists == False:
+                                print("Create '" + csv_keyword.text + "' keyword [Targeting : " + csv_keyword.targeting + "]")
+                                create_adwords_keyword(client, adwords_ad_group_id, csv_keyword)
+                                # Refresh the account ads group's keywords list
+                                account_ads_group_keywords = get_adwords_ads_group_keywords(
+                                    client,
+                                    adwords_ad_group_id,
+                                )
+                                created_keywords += 1
 
     print('Campaigns created : ' + str(created_campaigns) + ' on ' + nb_campaigns + ' found')
     print('Ads groups created : ' + str(created_ads_groups) + ' on ' + nb_ads_groups + ' found')

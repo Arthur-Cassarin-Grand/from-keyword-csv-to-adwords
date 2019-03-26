@@ -94,6 +94,15 @@ def add_item_if_not_exists(item, items_list):
         items_list.append(item)
 
 """
+Return a keyword into broad modified (+) format
+I.e : super keyword -> +super +keyword
+"""
+def get_broad_modified(keyword):
+    keyword = '+' + keyword
+    keyword = keyword.replace(' ', ' +')
+    return keyword
+
+"""
 Return a list of AdsCampaign() with no duplicates.
 """
 def get_ads_campaigns(file, headings_map, delimiter):
@@ -174,6 +183,8 @@ def get_ads_keywords(file, headings_map, targeting_map, delimiter):
                 targeting = 'PHRASE'
             elif targeting == targeting_map['EXACT']:
                 targeting = 'EXACT'
+            elif targeting == targeting_map['BPE']:
+                targeting = 'BPE'
             else:
                 print('The keyword n°' + str(line_counter) + ' has an invalid targeting (must match the heading_targeting pattern).')
                 sys.exit(1)

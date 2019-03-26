@@ -17,6 +17,12 @@ You can edit headings mapping by with the `headings_map` from the main.py to mat
 You can do the same for targeting settings with the `targeting_map` variable.
 Don't use spaces in headings or you'll have a `KeyError exception` (will be fix ASAP).
 
+The 'BPE' targeting ask the script to create 3 differents targeted keywords in the same ad group :
+
+- +keyword
+- "keyword"
+- [keyword]
+
 **This script does not create ads**, just campaigns, ads group and keywords in them.
 
 ## Librairies used
